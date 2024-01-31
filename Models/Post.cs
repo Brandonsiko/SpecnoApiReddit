@@ -1,17 +1,20 @@
-﻿namespace SpecnoApiReddit.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SpecnoApiReddit.Models
 {
     public class Post
     {
-        public int id { get; set; }
-        public string? Title { get; set; }
+        [Key]
+        public int postId { get; set; }
+        public string Title { get; set; }
+        public string Message { get; set; }
         public DateTime PostCreation { get; set; }
-        public List<string> Pictures { get; set; }
 
-        public List<Likes> MyLikes { get; set; }
+        
+        // Other properties as needed
 
-        public Post() { 
-
-            MyLikes= new List<Likes>(); 
-        }
+        public ICollection<Likes>? MyLikes { get; set; }
+        public ICollection<Comment>? Comments { get; set; }
     }
 }
