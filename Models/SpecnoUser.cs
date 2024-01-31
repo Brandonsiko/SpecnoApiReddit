@@ -5,17 +5,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SpecnoApiReddit.Models
 {
-    public class SpecnoUser
+    public class SpecnoUser:UniqueIdentifier
     {
         [Key]
-        public int User_ID { get; set; }
+        public int UserId { get; set; }
+
+        // Username for the user (unique)
         public string Username { get; set; }
+
+        // Password for the user (hashed and salted in a real-world scenario)
         public string Password { get; set; }
+        public ICollection<Post> Posts { get; set; }
+        
 
-        // Other properties as needed
 
-        [ForeignKey("postId")]
-        public int postId { get; set; }
-        public List<Post>? Posts { get; set; }
     }
 }

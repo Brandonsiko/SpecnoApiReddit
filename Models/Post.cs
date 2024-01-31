@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SpecnoApiReddit.Models
 {
-    public class Post
+    public class Post:UniqueIdentifier
     {
         [Key]
         public int postId { get; set; }
@@ -11,10 +11,10 @@ namespace SpecnoApiReddit.Models
         public string Message { get; set; }
         public DateTime PostCreation { get; set; }
 
-        
+
         // Other properties as needed
 
-        public ICollection<Likes>? MyLikes { get; set; }
-        public ICollection<Comment>? Comments { get; set; }
+        public ICollection<Likes> Likes { get; set; }
+        public ICollection<Comment> Comments { get; set; }
     }
 }

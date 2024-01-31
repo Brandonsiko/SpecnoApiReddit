@@ -41,21 +41,26 @@ namespace SpecnoApiReddit.Controllers
               return NotFound();
           }
             var specnoUser = await _context.SpecnoUsers.FindAsync(id);
+            var specnoPostDetails = await _context.SpecnoUsers
+                    .Include(u => u.Posts)
+                    .ThenInclude(p => p.Likes)
+                    .Include(u => u.Posts)
+                    .ThenInclude(p => p.Comments)
+                    .FirstOrDefaultAsync(u => u.UserId == id);
 
             if (specnoUser == null)
             {
                 return NotFound();
             }
 
-            return specnoUser;
+            return specnoPostDetails;
         }
 
         // PUT: api/SpecnoUsers/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSpecnoUser(int id, SpecnoUser specnoUser)
         {
-            if (id != specnoUser.User_ID)
+            if (id != specnoUser.UserId)
             {
                 return BadRequest();
             }
@@ -93,7 +98,7 @@ namespace SpecnoApiReddit.Controllers
             _context.SpecnoUsers.Add(specnoUser);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSpecnoUser", new { id = specnoUser.User_ID }, specnoUser);
+            return CreatedAtAction("GetSpecnoUser", new { id = specnoUser.UserId }, specnoUser);
         }
 
         // DELETE: api/SpecnoUsers/5
@@ -118,7 +123,7 @@ namespace SpecnoApiReddit.Controllers
 
         private bool SpecnoUserExists(int id)
         {
-            return (_context.SpecnoUsers?.Any(e => e.User_ID == id)).GetValueOrDefault();
+            return (_context.SpecnoUsers?.Any(e => e.UserId == id)).GetValueOrDefault();
         }
     }
 }

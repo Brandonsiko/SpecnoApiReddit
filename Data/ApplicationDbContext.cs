@@ -17,21 +17,9 @@ public class ApplicationDbContext:DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-       
+
         // Relationships:
        
-
-   
-       /* modelBuilder.Entity<Likes>()
-            .HasOne(l => l.Post)
-            .WithMany(p => p.MyLikes)
-            .HasForeignKey(l => l.PostId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<Comment>()
-            .HasOne(c => c.PostPost)
-            .WithMany(p => p.Comments)
-            .HasForeignKey(c => c.PostpostId)
-            .OnDelete(DeleteBehavior.Cascade);*/
+        base.OnModelCreating(modelBuilder);
     }
 }
