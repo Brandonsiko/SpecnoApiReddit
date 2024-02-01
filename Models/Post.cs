@@ -11,6 +11,8 @@ namespace SpecnoApiReddit.Models
         public string Message { get; set; }
         public DateTime PostCreation { get; set; }
 
+        public int UserId { get; set; }
+
 
         // Other properties as needed
 

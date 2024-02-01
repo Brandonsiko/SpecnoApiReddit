@@ -7,5 +7,6 @@ namespace SpecnoApiReddit.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string UniqueId { get; }= Guid.NewGuid().ToString();
+
     }
 }
