@@ -45,10 +45,10 @@ namespace SpecnoApiReddit.Controllers
                                    .Select(p => new Post { PostId = p.PostId, Title = p.Title, Message = p.Message })
                                    .ToList(),
                 Comments = _context.Comments.Where(c => c.UserId == id)
-                                         .Select(c => new Comment { CommentId = c.CommentId, CommentText = c.CommentText })
+                                         .Select(c => new Comment { CommentId = c.CommentId, CommentText = c.CommentText ,PostId=c.PostId ,UserId=c.UserId})
                                          .ToList(),
                 Likes = _context.Likes.Where(l => l.UserId == id)
-                                  .Select(l => new Likes { PostId = l.PostId, likes = l.likes })
+                                  .Select(l => new Likes { PostId = l.PostId, likes = l.likes ,Dislikes=l.Dislikes})
                                   .ToList()
             };
 

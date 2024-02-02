@@ -47,7 +47,7 @@ namespace SpecnoApiReddit.Controllers
                 return NotFound();
             }
 
-            return comment;
+            return await _context.Comments.FindAsync(id);
         }
 
       
@@ -68,16 +68,14 @@ namespace SpecnoApiReddit.Controllers
                 return BadRequest("There isn't a post to comment on please make sure you have the correct post Id");
             }
             comment.UserId = post.UserId;
+            comment.PostId = post.PostId;
+
             _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetComment", new { id = comment.CommentId }, comment);
         }
 
-       
-        private bool CommentExists(int id)
-        {
-            return (_context.Comments?.Any(e => e.CommentId == id)).GetValueOrDefault();
-        }
+      
     }
 }

@@ -14,6 +14,5 @@ namespace SpecnoApiReddit.Models
         public int UserId { get; set; }
         //Relationship
 
-        public ICollection<Likes> commentlikes { get; set; }
     }
 }

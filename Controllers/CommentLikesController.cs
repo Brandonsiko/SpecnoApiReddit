@@ -34,7 +34,7 @@ namespace SpecnoApiReddit.Controllers
         }
         
         // GET: api/CommentLikes/5
-        [HttpGet("{id}")]
+        /*[HttpGet("{id}")]
         public async Task<ActionResult<CommentLikes>> GetCommentLikes(int id)
         {
           if (_context.CommentLikes == null)
@@ -49,62 +49,66 @@ namespace SpecnoApiReddit.Controllers
             }
 
             return commentLikes;
-        }
+        }*/
 
 
 
-
-
-
-
-        [HttpPost("posts/{postId}/CommentLikes")]
-        public async Task<ActionResult<CommentLikes>> PostCommentLikes(CommentLikes commentLikes,int postid)
+        [HttpPost("comment/{commentid}/CommentLikes")]
+        public async Task<ActionResult<CommentLikes>> PostCommentLikes(CommentLikes commentLikes,int commentid)
         {
           if (_context.CommentLikes == null)
           {
               return Problem("Entity set 'ApplicationDbContext.CommentLikes'  is null.");
           }
-            var post = _context.Posts.FindAsync(postid);
+            var comment = await _context.Comments.FindAsync(commentid);
 
-            if (post==null)
+            if (comment==null)
             {
-                return BadRequest("There is no such post please check id properly");
+                return BadRequest("There is no such comment please check id properly");
             }
 
            commentLikes.likes++;
+            commentLikes.PostId= comment.PostId; 
+            commentLikes.UserId= comment.UserId;
+            commentLikes.CommentId= comment.CommentId;
+
            _context.CommentLikes.Add(commentLikes);
             await _context.SaveChangesAsync();
 
-            return NoContent() ;
+            return Ok(commentLikes) ;
         }
 
 
 
 
-        [HttpPost("posts/{postId}/CommentDislikes")]
-        public async Task<ActionResult<CommentLikes>> DislikeCommentLikes(CommentLikes commentLikes, int postid)
+        [HttpPost("commment/{commentid}/CommentDislikes")]
+        public async Task<ActionResult<CommentLikes>> DislikeCommentLikes(CommentLikes commentLikes, int commentid)
         {
             if (_context.CommentLikes == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.CommentLikes'  is null.");
             }
-            var post = _context.Posts.FindAsync(postid);
+            var comment = await _context.Comments.FindAsync(commentid);
 
-            if (post == null)
+            if (comment == null)
             {
                 return BadRequest("There is no such post please check id properly");
             }
 
-            commentLikes.likes--;
+            commentLikes.Dislikes++;
+
+            commentLikes.PostId = comment.PostId;
+            commentLikes.UserId = comment.UserId;
+            commentLikes.CommentId = comment.CommentId;
             _context.CommentLikes.Add(commentLikes);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(commentLikes);
         }
 
 
        // DELETE: api/CommentLikes/5
-       [HttpDelete("{id}")]
+       /*[HttpDelete("{id}")]
        public async Task<IActionResult> DeleteCommentLikes(int id)
        {
            if (_context.CommentLikes == null)
@@ -121,11 +125,8 @@ namespace SpecnoApiReddit.Controllers
            await _context.SaveChangesAsync();
 
            return NoContent();
-       }
+       }*/
 
-       private bool CommentLikesExists(int id)
-       {
-           return (_context.CommentLikes?.Any(e => e.Id == id)).GetValueOrDefault();
-       }
+       
     }
 }

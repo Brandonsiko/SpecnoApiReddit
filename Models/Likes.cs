@@ -7,10 +7,10 @@ namespace SpecnoApiReddit.Models
     {
         public int LikesCount { get; private set; }
         public int likes { get; set; }
-        public int Dislikes { get; set; }
+        public int Dislikes { get;  set; }
 
-        public int PostId { get; set; }
-        public int UserId { get; set; }
+        public int PostId { get;  set; }
+        public int UserId { get;  set; }
 
         public Likes()
         {
