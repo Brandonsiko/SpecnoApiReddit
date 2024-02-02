@@ -13,7 +13,7 @@ namespace SpecnoApiReddit.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class CommentsController : ControllerBase
-    {
+    { 
         private readonly ApplicationDbContext _context;
 
         public CommentsController(ApplicationDbContext context)
@@ -67,7 +67,7 @@ namespace SpecnoApiReddit.Controllers
             {
                 return BadRequest("There isn't a post to comment on please make sure you have the correct post Id");
             }
-            
+            comment.UserId = post.UserId;
             _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
 

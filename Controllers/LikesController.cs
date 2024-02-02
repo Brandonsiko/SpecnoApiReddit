@@ -20,7 +20,7 @@ namespace SpecnoApiReddit.Controllers
         {
             _context = context;
         }
-
+        
         // GET: api/Likes
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Likes>>> GetLikes()
@@ -35,16 +35,27 @@ namespace SpecnoApiReddit.Controllers
        
 
         // POST: api/Likes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPost("posts/{postId}/likes")]
-        public async Task<ActionResult<Likes>> AddLike(Likes likes)
+        public async Task<ActionResult<Likes>> AddLike(Likes likes,int postId)
         {
-          if (_context.Likes == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Likes'  is null.");
-          }
-            int currentlike = likes.likes;
-            likes.likes=currentlike + 1;
+            if (_context.Likes == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Likes'  is null.");
+            }
+
+            var post = await _context.Posts.FindAsync(postId);
+            if (post == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Likes'  is null.");
+            }
+
+            //Incrementing likes
+
+            likes.PostId = postId;
+            likes.UserId = post.UserId;
+            likes.likes++;
+
             _context.Likes.Add(likes);
             await _context.SaveChangesAsync();
 
@@ -52,22 +63,31 @@ namespace SpecnoApiReddit.Controllers
         }
 
         [HttpPost("posts/{postId}/Dislike")]
-        public async Task<ActionResult<Likes>> DisLike(Likes likes)
+        public async Task<ActionResult<Likes>> DisLike(Likes likes,int postId)
         {
             if (_context.Likes == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Likes'  is null.");
             }
-            int currentlike = likes.likes;
-            likes.likes = currentlike - 1;
+
+            var post = await _context.Posts.FindAsync(postId);
+            if (post == null) 
+            {
+                return Problem("Entity set 'ApplicationDbContext.Likes'  is null.");
+            }
+
+
+            //Decrementing likes
+
+            likes.PostId = postId;
+            likes.UserId= post.UserId;
+
+            likes.Dislikes++;  
             _context.Likes.Add(likes);
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        // DELETE: api/Likes/5
-       
+        }       
 
         private bool LikesExists(int id)
         {

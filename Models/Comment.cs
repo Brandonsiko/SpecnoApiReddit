@@ -14,9 +14,6 @@ namespace SpecnoApiReddit.Models
         public int UserId { get; set; }
         //Relationship
 
-        /*[ForeignKey("Postpost")]
-        public int PostpostId { get; set; }
-        
-        public Post PostPost { get; set; }*/
+        public ICollection<Likes> commentlikes { get; set; }
     }
 }

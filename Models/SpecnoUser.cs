@@ -10,17 +10,16 @@ namespace SpecnoApiReddit.Models
         [Key]
         public int UserId { get; set; }
 
-        // Username for the user (unique)
         [Required]
         // Username for the user (unique)
+
         public string Username { get; set; }
 
         // Password for the user (hashed and salted in a real-world scenario)
+
         [Required]
         public string Password { get; set; }
-        //public ICollection<Post> Posts { get; set; }
         
-
 
     }
 }

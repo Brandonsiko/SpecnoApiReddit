@@ -5,16 +5,21 @@ namespace SpecnoApiReddit.Models
 {
     public class Likes :UniqueIdentifier
     {
+        public int LikesCount { get; private set; }
         public int likes { get; set; }
         public int Dislikes { get; set; }
-        public int LikesCount { get; }
 
         public int PostId { get; set; }
-
         public int UserId { get; set; }
 
-        public Likes() { 
-        LikesCount= likes + Dislikes;
+        public Likes()
+        {
+            CalculateLikesCount();
+        }
+
+        public void CalculateLikesCount()
+        {
+            LikesCount = likes + Dislikes;
         }
         //Relationship
         /*[ForeignKey("Post")]

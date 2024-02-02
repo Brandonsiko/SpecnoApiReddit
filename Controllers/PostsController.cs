@@ -22,7 +22,7 @@ namespace SpecnoApiReddit.Controllers
         }
 
         // GET: api/Posts
-        [HttpGet]
+       [HttpGet]
         public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
         {
             if (_context.Posts == null)
@@ -47,7 +47,7 @@ namespace SpecnoApiReddit.Controllers
                 return NotFound();
             }
 
-            return post;
+            return  await _context.Posts.FindAsync(id);
         }
 
         // PUT: api/Posts/5
@@ -55,7 +55,7 @@ namespace SpecnoApiReddit.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPost(int id, Post post)
         {
-            if (id != post.postId)
+            if (id != post.PostId)
             {
                 return BadRequest();
             }
@@ -82,24 +82,26 @@ namespace SpecnoApiReddit.Controllers
         }
 
         // POST: api/Posts
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{userId}")]
         public async Task<ActionResult<Post>> SendPost(Post post,int userId)
         {
-          if (_context.Posts == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Posts'  is null.");
-          }
-          var user= await _context.SpecnoUsers.FindAsync(userId);
-          if (user == null)
+            if (_context.Posts == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Posts'  is null.");
+            }
+            var user= await _context.SpecnoUsers.FindAsync(userId);
+            
+            
+            if (user == null)
             {
                 return BadRequest("No User logged in");
             }
+           
             post.UserId= userId;
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPost", new { id = post.postId }, post);
+            return CreatedAtAction("GetPost", new { id = post.PostId }, post);
         }
 
         // DELETE: api/Posts/5
@@ -124,7 +126,7 @@ namespace SpecnoApiReddit.Controllers
 
         private bool PostExists(int id)
         {
-            return (_context.Posts?.Any(e => e.postId == id)).GetValueOrDefault();
+            return (_context.Posts?.Any(e => e.PostId == id)).GetValueOrDefault();
         }
     }
 }
