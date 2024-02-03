@@ -36,8 +36,8 @@ namespace SpecnoApiReddit.Controllers
 
         // POST: api/Likes
 
-        [HttpPost("posts/{postId}/likes")]
-        public async Task<ActionResult<Likes>> AddLike(Likes likes,int postId)
+        [HttpPost("posts/{userid}/{postId}/addlike")]
+        public async Task<ActionResult<Likes>> AddLike(Likes likes,int postId,int userid)
         {
             if (_context.Likes == null)
             {
@@ -45,48 +45,58 @@ namespace SpecnoApiReddit.Controllers
             }
 
             var post = await _context.Posts.FindAsync(postId);
+            var user = await _context.SpecnoUsers.FindAsync(userid);
             if (post == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Likes'  is null.");
             }
 
+            if (user == null)
+            {
+                return Problem("No valid user is invalid");
+            }
+
             //Incrementing likes
 
-            likes.PostId = postId;
-            likes.UserId = post.UserId;
+            likes.PostId = post.PostId;
+            likes.UserId = user.UserId;
             likes.likes++;
 
             _context.Likes.Add(likes);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(likes);
         }
 
-        [HttpPost("posts/{postId}/Dislike")]
-        public async Task<ActionResult<Likes>> DisLike(Likes likes,int postId)
+        [HttpPost("posts/{userid}/{postId}/addDislike")]
+        public async Task<ActionResult<Likes>> DisLike(Likes likes,int postId, int userid)
         {
             if (_context.Likes == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Likes'  is null.");
             }
-
+            var user = await _context.SpecnoUsers.FindAsync(userid);
             var post = await _context.Posts.FindAsync(postId);
             if (post == null) 
             {
                 return Problem("Entity set 'ApplicationDbContext.Likes'  is null.");
             }
 
+            if (user == null)
+            {
+                return Problem("No valid user");
+            }
 
             //Decrementing likes
 
-            likes.PostId = postId;
-            likes.UserId= post.UserId;
+            likes.PostId = post.PostId;
+            likes.UserId= user.UserId;
 
             likes.Dislikes++;  
             _context.Likes.Add(likes);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(likes);
         }       
 
         private bool LikesExists(int id)

@@ -47,11 +47,27 @@ namespace SpecnoApiReddit.Controllers
                 return NotFound();
             }
 
-            return  await _context.Posts.FindAsync(id);
+            var postdto = new PostDetails
+            {
+                PostId = post.Id,
+                Title = post.Title,
+                Message = post.Message,
+                UserId = post.UserId,
+                PostCreation = post.PostCreation,
+                Likes = _context.Likes.Where(p => p.UserId == post.UserId)
+                .Select(p => new Likes { PostId = p.PostId, likes = p.likes, Dislikes = p.Dislikes, UserId = p.UserId })
+                .ToList(),
+                Comments = _context.Comments.Where(p => p.UserId == post.UserId)
+                .Select(p => new Comment { PostId = p.PostId,  CommentId= p.CommentId, CommentText = p.CommentText, UserId = p.UserId })
+                .ToList(),
+            };
+
+            return  Ok(postdto);
         }
 
+
+
         // PUT: api/Posts/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPost(int id, Post post)
         {

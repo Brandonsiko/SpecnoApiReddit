@@ -54,20 +54,26 @@ namespace SpecnoApiReddit.Controllers
 
         // POST: api/Comments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("{postid}")]
-        public async Task<ActionResult<Comment>> SendComment(Comment comment, int postid)
+        [HttpPost("post/{userid}/{postid}")]
+        public async Task<ActionResult<Comment>> SendComment(Comment comment, int postid,int userid)
         {
-          if (_context.Comments == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Comments'  is null.");
-          }
+            if (_context.Comments == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Comments'  is null.");
+            }
 
-          var post= await _context.Posts.FindAsync(postid);
+            var post= await _context.Posts.FindAsync(postid);
+            var user = await _context.SpecnoUsers.FindAsync(userid);
             if (post == null)
             {
                 return BadRequest("There isn't a post to comment on please make sure you have the correct post Id");
             }
-            comment.UserId = post.UserId;
+
+            if (user== null)
+            {
+                return BadRequest("Invalid user add correct user context");
+            }
+            comment.UserId = user.UserId;
             comment.PostId = post.PostId;
 
             _context.Comments.Add(comment);
