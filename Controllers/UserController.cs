@@ -94,31 +94,27 @@ namespace SpecnoApiReddit.Controllers
             {
                 return BadRequest("no such user present");
             }
-            var t = _context.Likes.Where(l => l.UserId == userid)
-                                  .Select(l => new Likes { PostId = l.PostId, likes = l.likes, Dislikes = l.Dislikes })
-                                  .ToList();
-
-
+            var postIds = _context.Likes.Where(l => l.UserId == userid).Select(l => l.PostId).ToList();
 
             var userdto = new UserDetails
             {
                 UserId = User.UserId,
                 Username = User.Username,
-                Likes = _context.Likes.Where(l => l.UserId == userid)
-                                  .Select(l => new Likes { PostId = l.PostId, likes = l.likes, Dislikes = l.Dislikes })
-                                  .ToList()
+                Posts = _context.Posts.Where(l => postIds.Contains(l.PostId)).ToList()
             };
+                                  
+            
 
             return Ok(userdto);
         }
 
 
         //Getting posts created by a user
-        [HttpGet("user/posts/userliked/{username}")]
-        public async Task<ActionResult<UserDetails>> GetUsernamePosts(string usersname)
+        [HttpGet("user/posts/findby/{username}")]
+        public async Task<ActionResult<UserDetails>> GetUsernamePosts(string username)
         {
-            var User = _context.SpecnoUsers.Find(usersname);
-
+            var User =  _context.SpecnoUsers.FirstOrDefault(d=>d.Username==username);
+                       
             if (User == null)
             {
                 return BadRequest("no such user present");
