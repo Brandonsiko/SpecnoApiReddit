@@ -76,7 +76,18 @@ namespace SpecnoApiReddit.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(post).State = EntityState.Modified;
+            var existingPost = await _context.Posts.FindAsync(id);
+
+
+            if (post.Title != "string")
+            {
+                existingPost.Title = post.Title;
+            }
+            if (post.Message != "string")
+            {
+                existingPost.Title = post.Title;
+            }
+            _context.Entry(existingPost).State = EntityState.Modified;
 
             try
             {

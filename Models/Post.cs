@@ -9,7 +9,7 @@ namespace SpecnoApiReddit.Models
         public int PostId { get; set; }
         public string Title { get; set; }
         public string Message { get; set; }
-        public DateTime PostCreation { get; set; }
+        public DateTime PostCreation { get; } =  DateTime.Today;
 
         public int UserId { get; set; }
 
